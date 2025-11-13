@@ -1,13 +1,28 @@
 from langchain_ollama import OllamaLLM
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.prompts import PromptTemplate
 
-llm=OllamaLLM(model="llama3.1:8b")
+llm=OllamaLLM(model="llama3.1:8b")# or choose the model you want
 
-print("Welcome to the AI Chatbot!")
+chat_history=ChatMessageHistory()
+prompt=PromptTemplate(input_variables=["chat_history","question"],template="Previous conversation: {chat_history}\nUser: {question}\nAI:")
+
+def run_chain(question):
+    chat_history_text="\n".join([f"{msg.type.capitalize()}: {msg.content}" for msg in chat_history.messages])
+
+    response = llm.invoke(prompt.format(chat_history=chat_history_text,question=question))
+
+    chat_history.add_user_message(question)
+    chat_history.add_ai_message(response)
+
+    return response
+
+print("🤖 Welcome to the AI Chatbot!\nIf you want to quit just enter 'exit' to end the conversation")
 
 while True:
-    question=input("Your question or 'exit' to end the conversation:\n")
+    question=input("You:\n")
     if question.lower()=="exit":
         print("Have a nice Day , GoodBye !")
         break
-    response = llm.invoke(question)
-    print("\n AI : "+response)
+    response = run_chain(question=question)
+    print("\n🤖AI : "+response)
