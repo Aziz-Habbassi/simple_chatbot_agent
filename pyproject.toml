@@ -1,0 +1,12 @@
+[project]
+name = "simple-chatbot"
+version = "0.1.0"
+description = "Simple web-based chatbot built with Python, LangChain, and Ollama. Runs local LLMs through a clean UI for private, offline chat, with easy model management via Ollama and a modular LangChain pipeline for prompts and memory."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    langchain_ollama
+    langchain_community
+    langchain_core
+    streamlit
+]
